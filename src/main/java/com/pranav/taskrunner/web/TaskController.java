@@ -3,6 +3,7 @@ package com.pranav.taskrunner.web;
 import com.pranav.taskrunner.model.Task;
 import com.pranav.taskrunner.model.TaskExecution;
 import com.pranav.taskrunner.repo.TaskRepository;
+import com.pranav.taskrunner.service.KubernetesExecutor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,20 +68,18 @@ public class TaskController {
             return ResponseEntity.badRequest().body(Map.of("error", "No command specified"));
         }
 
-        // Simulate execution
-        TaskExecution exec = new TaskExecution();
-        exec.setStartTime(Instant.now());
-        exec.setOutput("SIMULATED_RUN: " + task.getCommand());
-        exec.setEndTime(Instant.now());
+        try {
+            KubernetesExecutor executor = new KubernetesExecutor();
+            TaskExecution exec = executor.runCommand(task.getCommand());
 
-        // Ensure the executions list exists
-        if (task.getTaskExecutions() == null) {
-            task.setTaskExecutions(new ArrayList<>());
+            task.getTaskExecutions().add(exec);
+            repo.save(task);
+
+            return ResponseEntity.ok(exec);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
-
-        task.getTaskExecutions().add(exec);
-        repo.save(task);
-
-        return ResponseEntity.ok(exec);
     }
 }

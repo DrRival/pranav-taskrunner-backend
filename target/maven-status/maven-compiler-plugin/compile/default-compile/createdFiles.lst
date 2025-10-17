@@ -1,3 +1,4 @@
+com\pranav\taskrunner\service\KubernetesExecutor.class
 com\pranav\taskrunner\model\Task.class
 com\pranav\taskrunner\repo\TaskRepository.class
 com\pranav\taskrunner\web\TaskController.class
