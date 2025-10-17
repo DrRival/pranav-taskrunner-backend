@@ -1,0 +1,6 @@
+com\pranav\taskrunner\model\Task.class
+com\pranav\taskrunner\repo\TaskRepository.class
+com\pranav\taskrunner\web\TaskController.class
+com\pranav\taskrunner\service\CommandValidator.class
+com\pranav\taskrunner\model\TaskExecution.class
+com\pranav\taskrunner\TaskrunnerApplication.class
