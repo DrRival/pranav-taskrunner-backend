@@ -30,12 +30,6 @@ mvn spring-boot:run
 curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
 
-```## ⚙️ Task 3 – Kubernetes Deployment (Minikube)
-
-### 🧠 Overview
-The Spring Boot backend is containerized using Docker and deployed in Minikube along with MongoDB.
-The setup uses a Deployment + Service pattern for both components and exposes the API through NodePort 30080.
-
 # 1. Package the Spring Boot app
 mvn clean package -DskipTests
 
@@ -55,4 +49,5 @@ kubectl get svc
 
 # 6. Access the service
 minikube service taskrunner-service --url
+
 
