@@ -30,24 +30,19 @@ mvn spring-boot:run
 curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
 
-# 1. Package the Spring Boot app
-mvn clean package -DskipTests
+```markdown
+### 🧰 Steps to Run
+```bash
+# 1. Ensure Minikube is running
+minikube start
 
-# 2. Point Docker to Minikube's internal daemon
-& minikube -p minikube docker-env | Invoke-Expression
+# 2. Verify cluster
+kubectl get nodes
 
-# 3. Build image inside Minikube
-docker build -t taskrunner-backend:latest .
+# 3. Run the backend
+mvn spring-boot:run
 
-# 4. Apply Kubernetes manifests
-kubectl apply -f k8s/mongo-deployment.yml
-kubectl apply -f k8s/taskrunner-deployment.yml
-
-# 5. Verify
-kubectl get pods
-kubectl get svc
-
-# 6. Access the service
-minikube service taskrunner-service --url
+# 4. Execute a task
+curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
 
