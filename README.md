@@ -8,6 +8,27 @@
 | 4 | Task created | ![PUT task](screenshots/4_put_task.png) |
 | 5 | Execution simulated | ![Execution](screenshots/5_execute_task.png) |
 ---
+---
+
+## ⚙️ Task 2 – Kubernetes Pod Execution (Fabric8 Client)
+
+### 🧠 Overview
+This phase extends the backend to execute task commands inside a **real Kubernetes pod** using the Fabric8 Java Client.  
+Each execution dynamically creates a short-lived BusyBox pod, runs the task’s command, retrieves logs, and then deletes the pod.
+
+### 🧰 Steps to Run
+```bash
+# 1. Ensure Minikube is running
+minikube start
+
+# 2. Verify cluster
+kubectl get nodes
+
+# 3. Run the backend
+mvn spring-boot:run
+
+# 4. Execute a task
+curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
 ## ☸️ Task 3 – Kubernetes Deployment (Minikube)
 
