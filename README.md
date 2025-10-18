@@ -29,7 +29,7 @@ mvn spring-boot:run
 # 4. Execute a task
 curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
-'''## ⚙️ Task 3 – Kubernetes Deployment (Minikube)
+```## ⚙️ Task 3 – Kubernetes Deployment (Minikube)
 
 ### 🧠 Overview
 The Spring Boot backend is containerized using Docker and deployed in Minikube along with MongoDB.
