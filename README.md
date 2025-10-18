@@ -8,6 +8,7 @@
 | 4 | Task created | ![PUT task](screenshots/4_put_task.png) |
 | 5 | Execution simulated | ![Execution](screenshots/5_execute_task.png) |
 
+---
 
 ## ⚙️ Task 2 – Kubernetes Pod Execution (Fabric8 Client)
 
@@ -16,6 +17,7 @@ This phase extends the backend to execute task commands inside a **real Kubernet
 Each execution dynamically creates a short-lived BusyBox pod, runs the task’s command, retrieves logs, and then deletes the pod.
 
 ### 🧰 Steps to Run
+
 ```bash
 # 1. Ensure Minikube is running
 minikube start
@@ -23,26 +25,39 @@ minikube start
 # 2. Verify cluster
 kubectl get nodes
 
-# 3. Run the backend
+# 3. Run the backend locally
 mvn spring-boot:run
 
 # 4. Execute a task
 curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
+---
 
-```markdown
+## ⚙️ Task 3 – Kubernetes Deployment (Minikube)
+
+### 🧠 Overview
+The Spring Boot backend is containerized using Docker and deployed in **Minikube** along with **MongoDB**.  
+The setup uses a Deployment + Service pattern for both components and exposes the API through **NodePort 30080**.
+
 ### 🧰 Steps to Run
+
 ```bash
-# 1. Ensure Minikube is running
-minikube start
+# 1. Package the Spring Boot app
+mvn clean package -DskipTests
 
-# 2. Verify cluster
-kubectl get nodes
+# 2. Point Docker to Minikube's internal daemon
+& minikube -p minikube docker-env | Invoke-Expression
 
-# 3. Run the backend
-mvn spring-boot:run
+# 3. Build the image inside Minikube
+docker build -t taskrunner-backend:latest .
 
-# 4. Execute a task
-curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
+# 4. Apply Kubernetes manifests
+kubectl apply -f k8s/mongo-deployment.yml
+kubectl apply -f k8s/taskrunner-deployment.yml
 
+# 5. Verify deployments
+kubectl get pods
+kubectl get svc
 
+# 6. Access the service
+minikube service taskrunner-service --url
