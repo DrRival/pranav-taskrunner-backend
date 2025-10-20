@@ -33,19 +33,17 @@ curl -X PUT http://localhost:8080/api/tasks/<task-id>/executions
 
 ---
 
-## ⚙️ Task 3 – Kubernetes Deployment (Minikube)
+⚙️ Task 3 – Kubernetes Deployment (Minikube)
+🧠 Overview
 
-### 🧠 Overview
-The Spring Boot backend is containerized using Docker and deployed in **Minikube** along with **MongoDB**.  
-The setup uses a Deployment + Service pattern for both components and exposes the API through **NodePort 30080**.
+The Spring Boot backend was containerized using Docker and deployed to Minikube along with MongoDB.
+Both use the Deployment + Service pattern, and the API is exposed through NodePort 30080.
 
-### 🧰 Steps to Run
-
-```bash
+🧰 Steps to Run
 # 1. Package the Spring Boot app
 mvn clean package -DskipTests
 
-# 2. Point Docker to Minikube's internal daemon
+# 2. Point Docker to Minikube’s internal daemon
 & minikube -p minikube docker-env | Invoke-Expression
 
 # 3. Build the image inside Minikube
@@ -61,3 +59,69 @@ kubectl get svc
 
 # 6. Access the service
 minikube service taskrunner-service --url
+
+⚙️ Task 4 – Ingress & External Access
+🧠 Overview
+
+This task exposed the TaskRunner backend externally via a Kubernetes Ingress using Minikube’s NGINX Ingress controller.
+The API became reachable at http://taskrunner.local/api/tasks
+.
+
+🧩 Steps Implemented
+# 1. Enable Ingress in Minikube
+minikube addons enable ingress
+
+
+Created k8s/taskrunner-ingress.yml mapping taskrunner.local → taskrunner-service:8080
+
+Updated local hosts file:
+
+127.0.0.1 taskrunner.local
+
+
+Verified routing with:
+
+curl http://taskrunner.local/api/tasks
+
+🧾 Current Status
+
+✅ Ingress controller: Running
+
+✅ Routing & DNS mapping: Working
+
+✅ Backend pod & MongoDB connection: Stable
+
+⚠️ Pending Fix: Spring Boot controller logs not visible → occasional 404 Not Found
+
+⚙️ Task 5 – Helm Chart Packaging & Deployment
+🧠 Overview
+
+This task focused on converting all Kubernetes manifests into a Helm Chart for reusable and automated deployment of both backend and MongoDB.
+
+🧩 Work Completed
+
+Created Helm chart under helm/taskrunner-chart/
+
+helm/taskrunner-chart/
+├── Chart.yaml
+├── values.yaml
+└── templates/
+    ├── deployment.yaml
+    ├── service.yaml
+    ├── mongo-deployment.yaml
+    ├── mongo-service.yaml
+    └── ingress.yaml
+
+
+Parameterized values in values.yaml
+
+Verified YAML syntax and template consistency
+
+Built local Docker image (taskrunner-backend:latest)
+
+Verified manual deployment in Kubernetes
+
+⚠️ Environment Limitation
+
+Helm CLI installation failed on the current Windows setup (no Windows binaries for latest version).
+All chart templates are ready and validated, awaiting Helm installation for final deployment.
